@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Venta>
+  <Cliente>
+    <Id>12345</Id>
+    <Nombre>Juan Perez</Nombre>
+    <Documento>CC123456</Documento>
+    <Email>juan.perez@example.com</Email>
+    <Telefono>3101234567</Telefono>
+  </Cliente>
+  <Vehiculo>
+    <Vin>1HGCM82633A004352</Vin>
+    <Marca>Honda</Marca>
+    <Modelo>Civic</Modelo>
+    <Ano>2020</Ano>
+    <Precio>35000</Precio>
+  </Vehiculo>
+  <Compras>
+    <Item>
+      <IdItem>1</IdItem>
+      <Descripcion>Seguro anual</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1200</Valor>
+    </Item>
+    <Item>
+      <IdItem>2</IdItem>
+      <Descripcion>GPS integrado</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>800</Valor>
+    </Item>
+    <Item>
+      <IdItem>3</IdItem>
+      <Descripcion>Kit de carretera</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>150</Valor>
+    </Item>
+    <Item>
+      <IdItem>4</IdItem>
+      <Descripcion>Mantenimiento preventivo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>5</IdItem>
+      <Descripcion>Polarizado de vidrios</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>200</Valor>
+    </Item>
+    <Item>
+      <IdItem>6</IdItem>
+      <Descripcion>Rines de lujo</Descripcion>
+      <Cantidad>4</Cantidad>
+      <Valor>2000</Valor>
+    </Item>
+    <Item>
+      <IdItem>7</IdItem>
+      <Descripcion>Tapicería en cuero</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>3000</Valor>
+    </Item>
+    <Item>
+      <IdItem>8</IdItem>
+      <Descripcion>Parrilla de techo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>9</IdItem>
+      <Descripcion>Sistema de sonido premium</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2500</Valor>
+    </Item>
+    <Item>
+      <IdItem>10</IdItem>
+      <Descripcion>Luces LED</Descripcion>
+      <Cantidad>2</Cantidad>
+      <Valor>400</Valor>
+    </Item>
+    <Item>
+      <IdItem>11</IdItem>
+      <Descripcion>Sensor de parqueo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>700</Valor>
+    </Item>
+    <Item>
+      <IdItem>12</IdItem>
+      <Descripcion>Cámara de reversa</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>900</Valor>
+    </Item>
+    <Item>
+      <IdItem>13</IdItem>
+      <Descripcion>Seguro de llantas</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>14</IdItem>
+      <Descripcion>Alarma antirrobo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1100</Valor>
+    </Item>
+    <Item>
+      <IdItem>15</IdItem>
+      <Descripcion>Extintor</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>100</Valor>
+    </Item>
+    <Item>
+      <IdItem>16</IdItem>
+      <Descripcion>Gato hidráulico</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>180</Valor>
+    </Item>
+    <Item>
+      <IdItem>17</IdItem>
+      <Descripcion>Juego de herramientas</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>250</Valor>
+    </Item>
+    <Item>
+      <IdItem>18</IdItem>
+      <Descripcion>Cubre asientos</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>320</Valor>
+    </Item>
+    <Item>
+      <IdItem>19</IdItem>
+      <Descripcion>Seguro contra robo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1800</Valor>
+    </Item>
+    <Item>
+      <IdItem>20</IdItem>
+      <Descripcion>Extensión de garantía</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2200</Valor>
+    </Item>
+    <Item>
+      <IdItem>21</IdItem>
+      <Descripcion>Kit de limpieza</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>80</Valor>
+    </Item>
+    <Item>
+      <IdItem>22</IdItem>
+      <Descripcion>Batería adicional</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>400</Valor>
+    </Item>
+    <Item>
+      <IdItem>23</IdItem>
+      <Descripcion>Seguro de accidentes</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1300</Valor>
+    </Item>
+    <Item>
+      <IdItem>24</IdItem>
+      <Descripcion>Manuales de usuario</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>50</Valor>
+    </Item>
+    <Item>
+      <IdItem>25</IdItem>
+      <Descripcion>Revisión técnico-mecánica</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>26</IdItem>
+      <Descripcion>Kit de emergencia médica</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>150</Valor>
+    </Item>
+    <Item>
+      <IdItem>27</IdItem>
+      <Descripcion>Llanta de repuesto</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>28</IdItem>
+      <Descripcion>Seguro extendido</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2500</Valor>
+    </Item>
+    <Item>
+      <IdItem>29</IdItem>
+      <Descripcion>Accesorios interiores</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>30</IdItem>
+      <Descripcion>Accesorios exteriores</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>700</Valor>
+    </Item>
+  </Compras>
+</Venta>
