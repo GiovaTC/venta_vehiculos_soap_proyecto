@@ -1,8 +1,9 @@
-# app.py 
+# app.py
 import sys
 import types
 import collections.abc
 import http.cookies
+import urllib.parse
 
 # --- 🔹 Parche para Spyne en Python 3.12 ---
 # Crear módulo base: spyne.util.six.moves
@@ -24,10 +25,20 @@ http_cookies_module = types.ModuleType("spyne.util.six.moves.http_cookies")
 http_cookies_module.SimpleCookie = http.cookies.SimpleCookie
 http_cookies_module.Morsel = http.cookies.Morsel
 
+# Submódulo urllib.parse
+urllib_parse_module = types.ModuleType("spyne.util.six.moves.urllib.parse")
+urllib_parse_module.unquote = urllib.parse.unquote
+urllib_parse_module.quote = urllib.parse.quote
+urllib_parse_module.urlencode = urllib.parse.urlencode
+urllib_parse_module.urlparse = urllib.parse.urlparse
+urllib_parse_module.parse_qs = urllib.parse.parse_qs
+urllib_parse_module.parse_qsl = urllib.parse.parse_qsl
+
 # Registrar en sys.modules
 sys.modules["spyne.util.six.moves"] = moves_module
 sys.modules["spyne.util.six.moves.collections_abc"] = collections_abc_module
 sys.modules["spyne.util.six.moves.http_cookies"] = http_cookies_module
+sys.modules["spyne.util.six.moves.urllib.parse"] = urllib_parse_module
 # --- 🔹 Fin del parche ---
 
 
