@@ -79,15 +79,25 @@ soap_app = Application(
 
 wsgi_app = WsgiApplication(soap_app)
 
-
-@app.route("/soap", methods=["POST"])
+@app.route("/ventaVehiculos", methods=["POST"])
 def soap_endpoint():
-    response = Response()
-    response.status_code = 200
-    response.headers["Content-Type"] = "text/xml"
-    response.data = wsgi_app(request.environ, response.start_response)
-    return response
+    # Spyne necesita trabajar a nivel WSGI
+    environ = request.environ
+    # start_response: función que Spyne invoca para setear headers y status
+    headers_status = {}
 
+    def start_response(status, response_headers, exc_info=None):
+        headers_status['status'] = status
+        headers_status['headers'] = response_headers
+        return None
+
+    result = wsgi_app(environ, start_response)
+
+    status_code = int(headers_status['status'].split(' ')[0])
+    headers = headers_status['headers']
+    body = b"".join(result)
+
+    return Response(body, status=status_code, headers=dict(headers))
 
 if __name__ == "__main__":
     init_pool()
