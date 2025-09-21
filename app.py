@@ -1,4 +1,20 @@
 # app.py
+import sys
+import types
+
+# --- 🔹 Parche para Spyne en Python 3.12 ---
+# Crea un módulo falso spyne.util.six.moves.collections_abc
+# que apunta directamente a collections.abc
+import collections.abc
+
+module_name = "spyne.util.six.moves.collections_abc"
+fake_module = types.ModuleType(module_name)
+fake_module.MutableSet = collections.abc.MutableSet
+fake_module.Sequence = collections.abc.Sequence
+
+sys.modules[module_name] = fake_module
+# --- 🔹 Fin del parche ---
+
 from flask import Flask, request, Response
 from spyne import Application, rpc, ServiceBase, Unicode
 from spyne.protocol.soap import Soap11
@@ -6,6 +22,7 @@ from spyne.server.wsgi import WsgiApplication
 
 from db import call_registrar_venta_xml, init_pool
 from parser import parse_venta_xml
+
 
 class VentaService(ServiceBase):
     @rpc(Unicode, _returns=Unicode)
@@ -21,4 +38,30 @@ class VentaService(ServiceBase):
             return result
         except Exception as e:
             return f'ERROR_DB: {str(e)}'
-    
+
+
+# --- Configuración Flask + Spyne ---
+app = Flask(__name__)
+
+soap_app = Application(
+    [VentaService],
+    tns="venta.vehiculos.soap",
+    in_protocol=Soap11(validator="lxml"),
+    out_protocol=Soap11(),
+)
+
+wsgi_app = WsgiApplication(soap_app)
+
+
+@app.route("/soap", methods=["POST"])
+def soap_endpoint():
+    response = Response()
+    response.status_code = 200
+    response.headers["Content-Type"] = "text/xml"
+    response.data = wsgi_app(request.environ, response.start_response)
+    return response
+
+
+if __name__ == "__main__":
+    init_pool()
+    app.run(host="0.0.0.0", port=5000)
