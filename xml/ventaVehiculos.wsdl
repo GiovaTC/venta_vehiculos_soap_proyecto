@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/ventaVehiculos"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/ventaVehiculos"
+             name="VentaVehiculosService">
+
+  <!-- ==== TYPES ==== -->
+  <types>
+    <xsd:schema>
+      <xsd:import namespace="http://example.com/ventaVehiculos" schemaLocation="ventaVehiculos.xsd"/>
+    </xsd:schema>
+  </types>
+
+  <!-- ==== MESSAGES ==== -->
+  <message name="RegistrarVentaInput">
+    <part name="parameters" element="tns:RegistrarVentaRequest"/>
+  </message>
+
+  <message name="RegistrarVentaOutput">
+    <part name="parameters" element="tns:RegistrarVentaResponse"/>
+  </message>
+
+  <!-- ==== PORT TYPE ==== -->
+  <portType name="VentaVehiculosPortType">
+    <operation name="RegistrarVenta">
+      <input message="tns:RegistrarVentaInput"/>
+      <output message="tns:RegistrarVentaOutput"/>
+    </operation>
+  </portType>
+
+  <!-- ==== BINDING ==== -->
+  <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="RegistrarVenta">
+      <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <!-- ==== SERVICE ==== -->
+  <service name="VentaVehiculosService">
+    <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
+      <soap:address location="http://localhost:5000/ventaVehiculos"/>
+    </port>
+  </service>
+
+</definitions>
