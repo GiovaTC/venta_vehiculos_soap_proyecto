@@ -1,5 +1,5 @@
 Flask>=2.0
 spyne>=2.13
 lxml>=4.9
-python-oracledb>=1.0
+oracledb>=1.0
 python-dotenv>=1.0
