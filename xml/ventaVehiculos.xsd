@@ -1,66 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://example.com/ventaVehiculos"
-            xmlns="http://example.com/ventaVehiculos"
-            elementFormDefault="qualified">
+<xsd:schema 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://example.com/ventaVehiculos"
+    xmlns:tns="http://example.com/ventaVehiculos"
+    elementFormDefault="qualified">
 
-  <!-- Cliente -->
-  <xsd:complexType name="Cliente">
-    <xsd:sequence>
-      <xsd:element name="Id" type="xsd:string"/>
-      <xsd:element name="Nombre" type="xsd:string"/>
-      <xsd:element name="Documento" type="xsd:string"/>
-      <xsd:element name="Email" type="xsd:string"/>
-      <xsd:element name="Telefono" type="xsd:string"/>
-    </xsd:sequence>
-  </xsd:complexType>
+    <!-- Elemento raíz: Request -->
+    <xsd:element name="RegistrarVentaRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Cliente" type="tns:Cliente"/>
+                <xsd:element name="Vehiculo" type="tns:Vehiculo"/>
+                <xsd:element name="Compra" type="tns:Compra"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 
-  <!-- Vehiculo -->
-  <xsd:complexType name="Vehiculo">
-    <xsd:sequence>
-      <xsd:element name="Vin" type="xsd:string"/>
-      <xsd:element name="Marca" type="xsd:string"/>
-      <xsd:element name="Modelo" type="xsd:string"/>
-      <xsd:element name="Ano" type="xsd:int"/>
-      <xsd:element name="Precio" type="xsd:decimal"/>
-    </xsd:sequence>
-  </xsd:complexType>
+    <!-- Elemento raíz: Response -->
+    <xsd:element name="RegistrarVentaResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Resultado" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 
-  <!-- Item de Compra -->
-  <xsd:complexType name="Item">
-    <xsd:sequence>
-      <xsd:element name="IdItem" type="xsd:int"/>
-      <xsd:element name="Descripcion" type="xsd:string"/>
-      <xsd:element name="Cantidad" type="xsd:int"/>
-      <xsd:element name="Valor" type="xsd:decimal"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <!-- Lista de Compras -->
-  <xsd:complexType name="Compras">
-    <xsd:sequence>
-      <xsd:element name="Item" type="Item" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <!-- Venta -->
-  <xsd:complexType name="Venta">
-    <xsd:sequence>
-      <xsd:element name="Cliente" type="Cliente"/>
-      <xsd:element name="Vehiculo" type="Vehiculo"/>
-      <xsd:element name="Compras" type="Compras"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <!-- Elementos globales para request y response -->
-  <xsd:element name="RegistrarVentaRequest" type="Venta"/>
-  <xsd:element name="RegistrarVentaResponse">
-    <xsd:complexType>
-      <xsd:sequence>
-        <xsd:element name="Codigo" type="xsd:int"/>
-        <xsd:element name="Mensaje" type="xsd:string"/>
-      </xsd:sequence>
+    <!-- Tipo complejo: Cliente -->
+    <xsd:complexType name="Cliente">
+        <xsd:sequence>
+            <xsd:element name="Id" type="xsd:int"/>
+            <xsd:element name="Nombre" type="xsd:string"/>
+            <xsd:element name="Email" type="xsd:string"/>
+        </xsd:sequence>
     </xsd:complexType>
-  </xsd:element>
+
+    <!-- Tipo complejo: Vehiculo -->
+    <xsd:complexType name="Vehiculo">
+        <xsd:sequence>
+            <xsd:element name="Id" type="xsd:int"/>
+            <xsd:element name="Marca" type="xsd:string"/>
+            <xsd:element name="Modelo" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Tipo complejo: Compra -->
+    <xsd:complexType name="Compra">
+        <xsd:sequence>
+            <xsd:element name="Fecha" type="xsd:date"/>
+            <xsd:element name="Monto" type="xsd:decimal"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
 </xsd:schema>
