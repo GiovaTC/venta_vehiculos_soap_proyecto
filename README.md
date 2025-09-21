@@ -2,7 +2,7 @@
 
 # VentaVehiculosSOAP 🚗📦
 
-Proyecto de ejemplo en **Python** que implementa un **servicio SOAP** para recibir un XML con información de clientes, vehículos y compras (~140 líneas), procesarlo y registrar los datos en una **base de datos Oracle** mediante un procedimiento almacenado .
+Proyecto de ejemplo en **Python** que implementa un **servicio SOAP** para recibir un XML con información de clientes, vehículos y compras , procesarlo y registrar los datos en una **base de datos Oracle** mediante un procedimiento almacenado .
 
 ---
 
