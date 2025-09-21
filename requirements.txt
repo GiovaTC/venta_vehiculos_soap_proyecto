@@ -1,5 +1,4 @@
-Flask>=2.0
-spyne>=2.13
-lxml>=4.9
-oracledb>=1.0
-python-dotenv>=1.0
+Flask==2.2.5
+spyne==2.13.15
+six==1.16.0
+oracledb==1.4.2

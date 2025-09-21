@@ -1,115 +1,117 @@
-from flask import Flask, request, Response, send_from_directory
-from spyne import Application, rpc, ServiceBase, Unicode, Integer, Decimal, Date
+# app.py
+import sys
+import types
+import collections.abc
+import http.cookies
+import urllib.parse
+
+# --- 🔹 Parche para Spyne en Python 3.12 ---
+moves_module = types.ModuleType("spyne.util.six.moves")
+
+collections_abc_module = types.ModuleType("spyne.util.six.moves.collections_abc")
+collections_abc_module.MutableSet = collections.abc.MutableSet
+collections_abc_module.Sequence = collections.abc.Sequence
+collections_abc_module.Iterable = collections.abc.Iterable
+collections_abc_module.Mapping = collections.abc.Mapping
+collections_abc_module.Set = collections.abc.Set
+collections_abc_module.KeysView = collections.abc.KeysView
+collections_abc_module.ValuesView = collections.abc.ValuesView
+collections_abc_module.ItemsView = collections.abc.ItemsView
+
+http_cookies_module = types.ModuleType("spyne.util.six.moves.http_cookies")
+http_cookies_module.SimpleCookie = http.cookies.SimpleCookie
+http_cookies_module.Morsel = http.cookies.Morsel
+
+urllib_parse_module = types.ModuleType("spyne.util.six.moves.urllib.parse")
+urllib_parse_module.unquote = urllib.parse.unquote
+urllib_parse_module.quote = urllib.parse.quote
+urllib_parse_module.urlencode = urllib.parse.urlencode
+urllib_parse_module.urlparse = urllib.parse.urlparse
+urllib_parse_module.parse_qs = urllib.parse.parse_qs
+urllib_parse_module.parse_qsl = urllib.parse.parse_qsl
+
+sys.modules["spyne.util.six.moves"] = moves_module
+sys.modules["spyne.util.six.moves.collections_abc"] = collections_abc_module
+sys.modules["spyne.util.six.moves.http_cookies"] = http_cookies_module
+sys.modules["spyne.util.six.moves.urllib.parse"] = urllib_parse_module
+# --- 🔹 Fin del parche ---
+
+
+from flask import Flask, request, Response
+from spyne import Application, rpc, ServiceBase, Unicode
 from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
-import oracledb
-import os
+from spyne.interface.wsdl import Wsdl11  # ✅ Importar Wsdl11
 
-# ==============================
-# Configuración Flask
-# ==============================
+from db import call_registrar_venta_xml, init_pool
+from parser import parse_venta_xml
+
+
+class VentaService(ServiceBase):
+    @rpc(Unicode, _returns=Unicode)
+    def procesarXmlVenta(ctx, xml_text):
+        """Procesa el XML de una venta de vehículos"""
+        if not xml_text or len(xml_text.strip()) == 0:
+            return 'ERROR: XML vacío'
+        try:
+            parsed = parse_venta_xml(xml_text)
+        except Exception as e:
+            return f'ERROR_PARSE: {str(e)}'
+        try:
+            result = call_registrar_venta_xml(xml_text)
+            return result
+        except Exception as e:
+            return f'ERROR_DB: {str(e)}'
+
+
+# --- Configuración Flask + Spyne ---
 app = Flask(__name__)
 
-# ==============================
-# Configuración de Oracle (Pool)
-# ==============================
-pool = None
-
-def init_pool():
-    global pool
-    if pool is None:
-        pool = oracledb.create_pool(
-            user="USUARIO",
-            password="PASSWORD",
-            dsn="localhost/XEPDB1",
-            min=1,
-            max=5,
-            increment=1
-        )
-        print("✅ Pool de conexiones inicializado")
-
-# ==============================
-# Servicio SOAP
-# ==============================
-class VentaVehiculosService(ServiceBase):
-
-    @rpc(Integer, Unicode, Unicode, Integer, Unicode, Unicode, Date, Decimal, _returns=Unicode)
-    def RegistrarVenta(ctx, ClienteId, ClienteNombre, ClienteEmail,
-                       VehiculoId, VehiculoMarca, VehiculoModelo,
-                       CompraFecha, CompraMonto):
-        """Registra una venta en la base de datos Oracle"""
-        if pool is None:
-            init_pool()
-
-        try:
-            conn = pool.acquire()
-            cur = conn.cursor()
-
-            result_var = cur.var(str)
-            cur.execute("""
-                BEGIN
-                    registrar_venta(:p_cliente_id, :p_cliente_nombre, :p_cliente_email,
-                                    :p_vehiculo_id, :p_vehiculo_marca, :p_vehiculo_modelo,
-                                    :p_compra_fecha, :p_compra_monto, :p_resultado);
-                END;
-                """,
-                p_cliente_id=ClienteId,
-                p_cliente_nombre=ClienteNombre,
-                p_cliente_email=ClienteEmail,
-                p_vehiculo_id=VehiculoId,
-                p_vehiculo_marca=VehiculoMarca,
-                p_vehiculo_modelo=VehiculoModelo,
-                p_compra_fecha=CompraFecha,
-                p_compra_monto=CompraMonto,
-                p_resultado=result_var
-            )
-
-            resultado = result_var.getvalue()
-            conn.commit()
-            return f"✅ Venta registrada correctamente: {resultado}"
-
-        except Exception as e:
-            return f"❌ Error registrando venta: {str(e)}"
-
-        finally:
-            if conn:
-                conn.close()
-
-# ==============================
-# Configuración de la aplicación SOAP
-# ==============================
 soap_app = Application(
-    [VentaVehiculosService],
-    tns='http://example.com/ventaVehiculos',
-    in_protocol=Soap11(validator='lxml'),
-    out_protocol=Soap11()
+    [VentaService],
+    tns="http://example.com/ventaVehiculos",
+    name="VentaVehiculosService",
+    in_protocol=Soap11(validator="lxml"),
+    out_protocol=Soap11(),
 )
 
-soap_wsgi_app = WsgiApplication(soap_app)
+wsgi_app = WsgiApplication(soap_app)
 
-@app.route('/ventaVehiculos', methods=['POST'])
-def soap_service():
-    """ Endpoint SOAP """
-    response = Response()
-    response.status_code = 200
-    response.headers['Content-Type'] = 'text/xml; charset=utf-8'
-    response.set_data(soap_wsgi_app(request.environ, response.start_response))
-    return response
 
-# ==============================
-# Endpoint WSDL estático (desde carpeta xml)
-# ==============================
+# --- Endpoint SOAP ---
+@app.route("/ventaVehiculos", methods=["POST"])
+def soap_endpoint():
+    """Procesa las peticiones SOAP"""
+    environ = request.environ
+    headers_status = {}
+
+    def start_response(status, response_headers, exc_info=None):
+        headers_status['status'] = status
+        headers_status['headers'] = response_headers
+        return None
+
+    result = wsgi_app(environ, start_response)
+    status_code = int(headers_status['status'].split(' ')[0])
+    headers = headers_status['headers']
+    body = b"".join(result)
+
+    return Response(body, status=status_code, headers=dict(headers))
+
+
 @app.route('/ventaVehiculos.wsdl', methods=['GET'])
 def wsdl():
-    """ Sirve el archivo WSDL desde carpeta xml """
-    wsdl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "xml")
-    return send_from_directory(wsdl_dir, "ventaVehiculos.wsdl", mimetype="text/xml")
+    base_url = request.host_url.rstrip('/')
+    wsdl_url = f"{base_url}/ventaVehiculos"
 
-# ==============================
-# Main
-# ==============================
-if __name__ == '__main__':
+    # ✅ Generar el WSDL correcto desde la aplicación interna
+    wsdl_xml = soap_app.app.wsdl11.get_interface_document(wsdl_url)
+
+    return Response(wsdl_xml, mimetype='text/xml')
+
+
+if __name__ == "__main__":
     init_pool()
+    print("✅ Pool de conexiones inicializado")
     print("🚀 Servicio corriendo en http://127.0.0.1:5000/ventaVehiculos")
     print("📄 WSDL disponible en http://127.0.0.1:5000/ventaVehiculos.wsdl")
     app.run(host="0.0.0.0", port=5000)

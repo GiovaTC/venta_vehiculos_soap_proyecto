@@ -4,18 +4,18 @@
    <soapenv:Body>
       <ven:RegistrarVentaRequest>
          <ven:Cliente>
-            <ven:Id>123</ven:Id>
+            <ven:Id>101</ven:Id>
             <ven:Nombre>Juan Pérez</ven:Nombre>
             <ven:Email>juan.perez@example.com</ven:Email>
          </ven:Cliente>
          <ven:Vehiculo>
-            <ven:Id>456</ven:Id>
+            <ven:Id>202</ven:Id>
             <ven:Marca>Toyota</ven:Marca>
             <ven:Modelo>Corolla</ven:Modelo>
          </ven:Vehiculo>
          <ven:Compra>
             <ven:Fecha>2025-09-21</ven:Fecha>
-            <ven:Monto>25000.00</ven:Monto>
+            <ven:Monto>18500.50</ven:Monto>
          </ven:Compra>
       </ven:RegistrarVentaRequest>
    </soapenv:Body>
