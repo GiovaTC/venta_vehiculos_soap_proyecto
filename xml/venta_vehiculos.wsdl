@@ -9,7 +9,8 @@
 
   <!-- ==== TYPES ==== -->
   <types>
-    <xsd:schema targetNamespace="http://example.com/ventaVehiculos">
+    <xsd:schema targetNamespace="http://example.com/ventaVehiculos"
+                elementFormDefault="qualified">
 
       <!-- Cliente -->
       <xsd:complexType name="Cliente">
