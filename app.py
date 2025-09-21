@@ -3,14 +3,17 @@ import sys
 import types
 
 # --- 🔹 Parche para Spyne en Python 3.12 ---
-# Crea un módulo falso spyne.util.six.moves.collections_abc
-# que apunta directamente a collections.abc
+import sys
+import types
 import collections.abc
 
 module_name = "spyne.util.six.moves.collections_abc"
 fake_module = types.ModuleType(module_name)
+
+# Mapear clases necesarias
 fake_module.MutableSet = collections.abc.MutableSet
 fake_module.Sequence = collections.abc.Sequence
+fake_module.Iterable = collections.abc.Iterable  # 🔹 agregado
 
 sys.modules[module_name] = fake_module
 # --- 🔹 Fin del parche ---
