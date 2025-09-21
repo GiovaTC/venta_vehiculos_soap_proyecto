@@ -1,1 +1,374 @@
 # venta_vehiculos_soap_proyecto
+
+# VentaVehiculosSOAP 🚗📦
+
+Proyecto de ejemplo en **Python** que implementa un **servicio SOAP** para recibir un XML con información de clientes, vehículos y compras (~140 líneas), procesarlo y registrar los datos en una **base de datos Oracle** mediante un procedimiento almacenado .
+
+---
+
+## 📂 Estructura del repositorio : 
+
+- **requirements.txt** — dependencias del proyecto.  
+- **app.py** — servidor SOAP (Flask + Spyne) que expone el método `procesarXmlVenta`.  
+- **parser.py** — funciones para parsear el XML y mapearlo a parámetros para Oracle .  
+- **db.py** — conexión a Oracle usando `python-oracledb` y llamada al procedimiento almacenado .  
+- **stored_procedure.sql** — ejemplo de procedimiento PL/SQL que espera el proyecto .  
+- **sample_venta.xml** — plantilla de ejemplo de XML de entrada .  
+
+---
+
+## ⚙️ Dependencias
+
+`requirements.txt`:
+
+```txt
+Flask>=2.0
+spyne>=2.13
+lxml>=4.9
+python-oracledb>=1.0
+python-dotenv>=1.0
+
+🗄️ Procedimiento almacenado .
+stored_procedure.sql:
+
+CREATE OR REPLACE PROCEDURE registrar_venta_xml(
+  p_xml IN CLOB,
+  p_result OUT VARCHAR2
+) AS
+BEGIN
+  -- Implementación simplificada: parsear el XML dentro de PL/SQL o llamar a paquetes que lo hagan
+  -- Aquí solo devolvemos OK para el ejemplo
+  p_result := 'OK';
+EXCEPTION
+  WHEN OTHERS THEN
+    p_result := 'ERROR: ' || SQLERRM;
+END registrar_venta_xml;
+/
+
+🔎 Nota: en entornos reales se recomienda usar tablas y procedimientos específicos que reciban parámetros individuales (cliente, vehículo, items)
+para mayor rendimiento y control transaccional. Este ejemplo usa un único CLOB para simplificar .
+
+📑 XML de entrada .
+sample_venta.xml :
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Venta>
+  <Cliente>
+    <Id>12345</Id>
+    <Nombre>Juan Perez</Nombre>
+    <Documento>CC123456</Documento>
+    <Email>juan.perez@example.com</Email>
+    <Telefono>3101234567</Telefono>
+  </Cliente>
+  <Vehiculo>
+    <Vin>1HGCM82633A004352</Vin>
+    <Marca>Honda</Marca>
+    <Modelo>Civic</Modelo>
+    <Ano>2020</Ano>
+    <Precio>35000</Precio>
+  </Vehiculo>
+  <Compras>
+    <Item>
+      <IdItem>1</IdItem>
+      <Descripcion>Seguro anual</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1200</Valor>
+    </Item>
+    <Item>
+      <IdItem>2</IdItem>
+      <Descripcion>GPS integrado</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>800</Valor>
+    </Item>
+    <Item>
+      <IdItem>3</IdItem>
+      <Descripcion>Kit de carretera</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>150</Valor>
+    </Item>
+    <Item>
+      <IdItem>4</IdItem>
+      <Descripcion>Mantenimiento preventivo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>5</IdItem>
+      <Descripcion>Polarizado de vidrios</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>200</Valor>
+    </Item>
+    <Item>
+      <IdItem>6</IdItem>
+      <Descripcion>Rines de lujo</Descripcion>
+      <Cantidad>4</Cantidad>
+      <Valor>2000</Valor>
+    </Item>
+    <Item>
+      <IdItem>7</IdItem>
+      <Descripcion>Tapicería en cuero</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>3000</Valor>
+    </Item>
+    <Item>
+      <IdItem>8</IdItem>
+      <Descripcion>Parrilla de techo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>9</IdItem>
+      <Descripcion>Sistema de sonido premium</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2500</Valor>
+    </Item>
+    <Item>
+      <IdItem>10</IdItem>
+      <Descripcion>Luces LED</Descripcion>
+      <Cantidad>2</Cantidad>
+      <Valor>400</Valor>
+    </Item>
+    <Item>
+      <IdItem>11</IdItem>
+      <Descripcion>Sensor de parqueo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>700</Valor>
+    </Item>
+    <Item>
+      <IdItem>12</IdItem>
+      <Descripcion>Cámara de reversa</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>900</Valor>
+    </Item>
+    <Item>
+      <IdItem>13</IdItem>
+      <Descripcion>Seguro de llantas</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>14</IdItem>
+      <Descripcion>Alarma antirrobo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1100</Valor>
+    </Item>
+    <Item>
+      <IdItem>15</IdItem>
+      <Descripcion>Extintor</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>100</Valor>
+    </Item>
+    <Item>
+      <IdItem>16</IdItem>
+      <Descripcion>Gato hidráulico</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>180</Valor>
+    </Item>
+    <Item>
+      <IdItem>17</IdItem>
+      <Descripcion>Juego de herramientas</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>250</Valor>
+    </Item>
+    <Item>
+      <IdItem>18</IdItem>
+      <Descripcion>Cubre asientos</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>320</Valor>
+    </Item>
+    <Item>
+      <IdItem>19</IdItem>
+      <Descripcion>Seguro contra robo</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1800</Valor>
+    </Item>
+    <Item>
+      <IdItem>20</IdItem>
+      <Descripcion>Extensión de garantía</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2200</Valor>
+    </Item>
+    <Item>
+      <IdItem>21</IdItem>
+      <Descripcion>Kit de limpieza</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>80</Valor>
+    </Item>
+    <Item>
+      <IdItem>22</IdItem>
+      <Descripcion>Batería adicional</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>400</Valor>
+    </Item>
+    <Item>
+      <IdItem>23</IdItem>
+      <Descripcion>Seguro de accidentes</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>1300</Valor>
+    </Item>
+    <Item>
+      <IdItem>24</IdItem>
+      <Descripcion>Manuales de usuario</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>50</Valor>
+    </Item>
+    <Item>
+      <IdItem>25</IdItem>
+      <Descripcion>Revisión técnico-mecánica</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>26</IdItem>
+      <Descripcion>Kit de emergencia médica</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>150</Valor>
+    </Item>
+    <Item>
+      <IdItem>27</IdItem>
+      <Descripcion>Llanta de repuesto</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>500</Valor>
+    </Item>
+    <Item>
+      <IdItem>28</IdItem>
+      <Descripcion>Seguro extendido</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>2500</Valor>
+    </Item>
+    <Item>
+      <IdItem>29</IdItem>
+      <Descripcion>Accesorios interiores</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>600</Valor>
+    </Item>
+    <Item>
+      <IdItem>30</IdItem>
+      <Descripcion>Accesorios exteriores</Descripcion>
+      <Cantidad>1</Cantidad>
+      <Valor>700</Valor>
+    </Item>
+  </Compras>
+</Venta>
+
+🐍 Código principal .
+🔗 Conexión a Oracle :
+db.py maneja un pool de conexiones y llama al procedimiento almacenado con un bloque PL/SQL:
+
+def call_registrar_venta_xml(xml_text: str) -> str:
+    if pool is None:
+        init_pool()
+    conn = pool.acquire()
+    try:
+        cur = conn.cursor()
+        result_var = cur.var(str)
+        cur.execute("BEGIN registrar_venta_xml(:p_xml, :p_result); END;",
+                    p_xml=xml_text, p_result=result_var)
+        return result_var.getvalue()
+    finally:
+        pool.release(conn)
+
+📝 Parseo de XML .
+parser.py usa lxml y devuelve un diccionario:
+
+def parse_venta_xml(xml_text: str) -> dict:
+    root = etree.fromstring(xml_text.encode('utf-8'))
+
+    cliente = {
+        'id': _get_text(root, './Cliente/Id'),
+        'nombre': _get_text(root, './Cliente/Nombre'),
+        'documento': _get_text(root, './Cliente/Documento'),
+        'email': _get_text(root, './Cliente/Email'),
+        'telefono': _get_text(root, './Cliente/Telefono'),
+    }
+
+    vehiculo = {
+        'vin': _get_text(root, './Vehiculo/Vin'),
+        'marca': _get_text(root, './Vehiculo/Marca'),
+        'modelo': _get_text(root, './Vehiculo/Modelo'),
+        'ano': _get_text(root, './Vehiculo/Ano'),
+        'precio': _get_text(root, './Vehiculo/Precio'),
+    }
+
+    items = []
+    for item in root.xpath('./Compras/Item'):
+        items.append({
+            'id': _get_text(item, './IdItem'),
+            'desc': _get_text(item, './Descripcion'),
+            'cantidad': _get_text(item, './Cantidad'),
+            'valor': _get_text(item, './Valor'),
+        })
+
+    return {'cliente': cliente, 'vehiculo': vehiculo, 'items': items}
+
+🌐 Servidor SOAP .
+app.py define el servicio con Flask + Spyne :
+
+class VentaService(ServiceBase):
+    @rpc(Unicode, _returns=Unicode)
+    def procesarXmlVenta(ctx, xml_text):
+        if not xml_text or len(xml_text.strip()) == 0:
+            return 'ERROR: XML vacío'
+        try:
+            parsed = parse_venta_xml(xml_text)
+        except Exception as e:
+            return f'ERROR_PARSE: {str(e)}'
+        try:
+            result = call_registrar_venta_xml(xml_text)
+            return result
+        except Exception as e:
+            return f'ERROR_DB: {str(e)}'
+
+El endpoint SOAP queda disponible en : 
+# arduino .
+
+http://127.0.0.1:8000/soap
+
+🧪 Cómo probarlo :
+Usando curl:
+bash :
+
+curl -X POST \
+  -H "Content-Type: text/xml; charset=utf-8" \
+  --data-binary @sample_venta.xml \
+  http://127.0.0.1:8000/soap
+
+Usando zeep (cliente Python):
+(opcional: se puede agregar un cliente_soap.py con zeep) .
+
+🔒 Seguridad y producción
+Usa variables de entorno para credenciales (.env).
+Habilita TLS (HTTPS) en producción.
+Limita tamaño de payload y valida esquemas XML (evita ataques XXE/DoS).
+Considera transformar XML a parámetros individuales para evitar SQL/PLSQL injection .
+
+▶️ Pasos para ejecutar localmente :
+Crear y activar un virtualenv.
+Instalar dependencias:
+bash
+pip install -r requirements.txt
+
+Crear archivo .env con:
+env
+ORACLE_USER=usuario
+ORACLE_PW=clave
+ORACLE_DSN=host:puerto/servicio
+Crear procedimiento almacenado en Oracle con stored_procedure.sql .
+
+Ejecutar servidor :
+bash
+python app.py
+
+Enviar peticiones SOAP a :
+arduino .
+http://127.0.0.1:8000/soap
+
+📌 Observaciones finales
+Se utiliza Spyne para el servidor SOAP .
+Conexión a Oracle con la librería oficial python-oracledb .
+Ajusta XPaths y el procedimiento almacenado según tu esquema real .
+
+📦 Extras (opcionales)
+cliente_soap.py con zeep .
+Dockerfile para contenerizar la aplicación .
+setup.sql con tablas e inserts de ejemplo .
