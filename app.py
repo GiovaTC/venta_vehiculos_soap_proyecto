@@ -1,13 +1,10 @@
-# app.py
-import sys
-import types
-
-# --- 🔹 Parche para Spyne en Python 3.12 ---
+# app.py 
 import sys
 import types
 import collections.abc
 import http.cookies
 
+# --- 🔹 Parche para Spyne en Python 3.12 ---
 # Crear módulo base: spyne.util.six.moves
 moves_module = types.ModuleType("spyne.util.six.moves")
 
