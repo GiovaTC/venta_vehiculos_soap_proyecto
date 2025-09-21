@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?> 
 <xsd:schema 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://example.com/ventaVehiculos"
     xmlns:tns="http://example.com/ventaVehiculos"
     elementFormDefault="qualified">
 
+    <!-- =================== -->
     <!-- Elemento raíz: Request -->
+    <!-- =================== -->
     <xsd:element name="RegistrarVentaRequest">
         <xsd:complexType>
             <xsd:sequence>
@@ -16,7 +18,9 @@
         </xsd:complexType>
     </xsd:element>
 
+    <!-- =================== -->
     <!-- Elemento raíz: Response -->
+    <!-- =================== -->
     <xsd:element name="RegistrarVentaResponse">
         <xsd:complexType>
             <xsd:sequence>
@@ -25,7 +29,9 @@
         </xsd:complexType>
     </xsd:element>
 
+    <!-- =================== -->
     <!-- Tipo complejo: Cliente -->
+    <!-- =================== -->
     <xsd:complexType name="Cliente">
         <xsd:sequence>
             <xsd:element name="Id" type="xsd:int"/>
@@ -34,7 +40,9 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <!-- =================== -->
     <!-- Tipo complejo: Vehiculo -->
+    <!-- =================== -->
     <xsd:complexType name="Vehiculo">
         <xsd:sequence>
             <xsd:element name="Id" type="xsd:int"/>
@@ -43,7 +51,9 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <!-- =================== -->
     <!-- Tipo complejo: Compra -->
+    <!-- =================== -->
     <xsd:complexType name="Compra">
         <xsd:sequence>
             <xsd:element name="Fecha" type="xsd:date"/>

@@ -1,67 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:tns="http://example.com/ventaVehiculos"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    name="VentaVehiculosService"
-    targetNamespace="http://example.com/ventaVehiculos">
+    targetNamespace="http://example.com/ventaVehiculos"
+    name="VentaVehiculosService">
 
-    <!-- =================== -->
-    <!-- TYPES (referencia al XSD externo) -->
-    <!-- =================== -->
-    <types>
-        <xsd:schema>
-            <xsd:import namespace="http://example.com/ventaVehiculos"
-                        schemaLocation="ventaVehiculos.xsd"/>
-        </xsd:schema>
-    </types>
+  <!-- ==== TYPES ==== -->
+  <types>
+    <xsd:schema targetNamespace="http://example.com/ventaVehiculos">
 
-    <!-- =================== -->
-    <!-- MESSAGES -->
-    <!-- =================== -->
-    <message name="RegistrarVentaInput">
-        <part name="parameters" element="tns:RegistrarVentaRequest"/>
-    </message>
+      <!-- Cliente -->
+      <xsd:complexType name="Cliente">
+        <xsd:sequence>
+          <xsd:element name="Id" type="xsd:string"/>
+          <xsd:element name="Nombre" type="xsd:string"/>
+          <xsd:element name="Documento" type="xsd:string"/>
+          <xsd:element name="Email" type="xsd:string"/>
+          <xsd:element name="Telefono" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
 
-    <message name="RegistrarVentaOutput">
-        <part name="parameters" element="tns:RegistrarVentaResponse"/>
-    </message>
+      <!-- Vehiculo -->
+      <xsd:complexType name="Vehiculo">
+        <xsd:sequence>
+          <xsd:element name="Vin" type="xsd:string"/>
+          <xsd:element name="Marca" type="xsd:string"/>
+          <xsd:element name="Modelo" type="xsd:string"/>
+          <xsd:element name="Ano" type="xsd:int"/>
+          <xsd:element name="Precio" type="xsd:decimal"/>
+        </xsd:sequence>
+      </xsd:complexType>
 
-    <!-- =================== -->
-    <!-- PORT TYPE -->
-    <!-- =================== -->
-    <portType name="VentaVehiculosPortType">
-        <operation name="RegistrarVenta">
-            <input message="tns:RegistrarVentaInput"/>
-            <output message="tns:RegistrarVentaOutput"/>
-        </operation>
-    </portType>
+      <!-- Item de Compra -->
+      <xsd:complexType name="Item">
+        <xsd:sequence>
+          <xsd:element name="IdItem" type="xsd:int"/>
+          <xsd:element name="Descripcion" type="xsd:string"/>
+          <xsd:element name="Cantidad" type="xsd:int"/>
+          <xsd:element name="Valor" type="xsd:decimal"/>
+        </xsd:sequence>
+      </xsd:complexType>
 
-    <!-- =================== -->
-    <!-- BINDING -->
-    <!-- =================== -->
-    <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <operation name="RegistrarVenta">
-            <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-    </binding>
+      <!-- Lista de Compras -->
+      <xsd:complexType name="Compras">
+        <xsd:sequence>
+          <xsd:element name="Item" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
 
-    <!-- =================== -->
-    <!-- SERVICE -->
-    <!-- =================== -->
-    <service name="VentaVehiculosService">
-        <documentation>Servicio SOAP para registrar ventas de vehículos</documentation>
-        <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
-            <soap:address location="http://localhost:5000/ventaVehiculos"/>
-        </port>
-    </service>
+      <!-- Venta -->
+      <xsd:complexType name="Venta">
+        <xsd:sequence>
+          <xsd:element name="Cliente" type="tns:Cliente"/>
+          <xsd:element name="Vehiculo" type="tns:Vehiculo"/>
+          <xsd:element name="Compras" type="tns:Compras"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Request y Response -->
+      <xsd:element name="RegistrarVentaRequest" type="tns:Venta"/>
+      <xsd:element name="RegistrarVentaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Codigo" type="xsd:int"/>
+            <xsd:element name="Mensaje" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+    </xsd:schema>
+  </types>
+
+  <!-- ==== MESSAGES ==== -->
+  <message name="RegistrarVentaInput">
+    <part name="parameters" element="tns:RegistrarVentaRequest"/>
+  </message>
+
+  <message name="RegistrarVentaOutput">
+    <part name="parameters" element="tns:RegistrarVentaResponse"/>
+  </message>
+
+  <!-- ==== PORT TYPE ==== -->
+  <portType name="VentaVehiculosPortType">
+    <operation name="RegistrarVenta">
+      <input message="tns:RegistrarVentaInput"/>
+      <output message="tns:RegistrarVentaOutput"/>
+    </operation>
+  </portType>
+
+  <!-- ==== BINDING ==== -->
+  <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="RegistrarVenta">
+      <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <!-- ==== SERVICE ==== -->
+  <service name="VentaVehiculosService">
+    <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
+      <soap:address location="http://localhost:5000/ventaVehiculos"/>
+    </port>
+  </service>
 
 </definitions>
