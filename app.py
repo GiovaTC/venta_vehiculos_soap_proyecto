@@ -6,17 +6,33 @@ import types
 import sys
 import types
 import collections.abc
+import http.cookies
 
-module_name = "spyne.util.six.moves.collections_abc"
-fake_module = types.ModuleType(module_name)
+# Crear módulo base: spyne.util.six.moves
+moves_module = types.ModuleType("spyne.util.six.moves")
 
-# Mapear clases necesarias
-fake_module.MutableSet = collections.abc.MutableSet
-fake_module.Sequence = collections.abc.Sequence
-fake_module.Iterable = collections.abc.Iterable  # 🔹 agregado
+# Submódulo collections_abc
+collections_abc_module = types.ModuleType("spyne.util.six.moves.collections_abc")
+collections_abc_module.MutableSet = collections.abc.MutableSet
+collections_abc_module.Sequence = collections.abc.Sequence
+collections_abc_module.Iterable = collections.abc.Iterable
+collections_abc_module.Mapping = collections.abc.Mapping
+collections_abc_module.Set = collections.abc.Set
+collections_abc_module.KeysView = collections.abc.KeysView
+collections_abc_module.ValuesView = collections.abc.ValuesView
+collections_abc_module.ItemsView = collections.abc.ItemsView
 
-sys.modules[module_name] = fake_module
+# Submódulo http_cookies
+http_cookies_module = types.ModuleType("spyne.util.six.moves.http_cookies")
+http_cookies_module.SimpleCookie = http.cookies.SimpleCookie
+http_cookies_module.Morsel = http.cookies.Morsel
+
+# Registrar en sys.modules
+sys.modules["spyne.util.six.moves"] = moves_module
+sys.modules["spyne.util.six.moves.collections_abc"] = collections_abc_module
+sys.modules["spyne.util.six.moves.http_cookies"] = http_cookies_module
 # --- 🔹 Fin del parche ---
+
 
 from flask import Flask, request, Response
 from spyne import Application, rpc, ServiceBase, Unicode
