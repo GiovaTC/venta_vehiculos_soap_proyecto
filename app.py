@@ -36,32 +36,69 @@ sys.modules["spyne.util.six.moves.http_cookies"] = http_cookies_module
 sys.modules["spyne.util.six.moves.urllib.parse"] = urllib_parse_module
 # --- 🔹 Fin del parche ---
 
-
 from flask import Flask, request, Response
-from spyne import Application, rpc, ServiceBase, Unicode
+from spyne import Application, rpc, ServiceBase, Unicode, ComplexModel, Decimal
 from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
-from spyne.interface.wsdl import Wsdl11  # ✅ Importar Wsdl11
 
 from db import call_registrar_venta_xml, init_pool
-from parser import parse_venta_xml
 
 
+# === 🔹 Modelos Spyne (coinciden con tu WSDL) ===
+class ClienteType(ComplexModel):
+    Id = Unicode
+    Nombre = Unicode
+    Documento = Unicode
+    Email = Unicode
+    Telefono = Unicode
+
+
+class VehiculoType(ComplexModel):
+    Placa = Unicode
+    Marca = Unicode
+    Modelo = Unicode
+    Precio = Decimal
+
+
+class RegistrarVentaResponseType(ComplexModel):
+    Codigo = Unicode
+    Mensaje = Unicode
+
+
+# === 🔹 Servicio Spyne ===
 class VentaService(ServiceBase):
-    @rpc(Unicode, _returns=Unicode)
-    def procesarXmlVenta(ctx, xml_text):
-        """Procesa el XML de una venta de vehículos"""
-        if not xml_text or len(xml_text.strip()) == 0:
-            return 'ERROR: XML vacío'
+    @rpc(ClienteType, VehiculoType, _returns=RegistrarVentaResponseType, _operation_name="RegistrarVenta")
+    def RegistrarVenta(ctx, cliente, vehiculo):
         try:
-            parsed = parse_venta_xml(xml_text)
-        except Exception as e:
-            return f'ERROR_PARSE: {str(e)}'
-        try:
+            xml_text = f"""
+            <RegistrarVentaRequest>
+                <Cliente>
+                    <Id>{cliente.Id}</Id>
+                    <Nombre>{cliente.Nombre}</Nombre>
+                    <Documento>{cliente.Documento}</Documento>
+                    <Email>{cliente.Email}</Email>
+                    <Telefono>{cliente.Telefono}</Telefono>
+                </Cliente>
+                <Vehiculo>
+                    <Placa>{vehiculo.Placa}</Placa>
+                    <Marca>{vehiculo.Marca}</Marca>
+                    <Modelo>{vehiculo.Modelo}</Modelo>
+                    <Precio>{vehiculo.Precio}</Precio>
+                </Vehiculo>
+            </RegistrarVentaRequest>
+            """
+
             result = call_registrar_venta_xml(xml_text)
-            return result
+
+            return RegistrarVentaResponseType(
+                Codigo="0",
+                Mensaje=result
+            )
         except Exception as e:
-            return f'ERROR_DB: {str(e)}'
+            return RegistrarVentaResponseType(
+                Codigo="1",
+                Mensaje=f"ERROR: {str(e)}"
+            )
 
 
 # --- Configuración Flask + Spyne ---
@@ -72,16 +109,14 @@ soap_app = Application(
     tns="http://example.com/ventaVehiculos",
     name="VentaVehiculosService",
     in_protocol=Soap11(validator="lxml"),
-    out_protocol=Soap11(),
+    out_protocol=Soap11()
 )
 
 wsgi_app = WsgiApplication(soap_app)
 
 
-# --- Endpoint SOAP ---
 @app.route("/ventaVehiculos", methods=["POST"])
 def soap_endpoint():
-    """Procesa las peticiones SOAP"""
     environ = request.environ
     headers_status = {}
 
@@ -98,15 +133,101 @@ def soap_endpoint():
     return Response(body, status=status_code, headers=dict(headers))
 
 
+# 🚨 Aquí forzamos el WSDL estático (idéntico al tuyo)
 @app.route('/ventaVehiculos.wsdl', methods=['GET'])
 def wsdl():
-    base_url = request.host_url.rstrip('/')
-    wsdl_url = f"{base_url}/ventaVehiculos"
+    wsdl_content = """<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:tns="http://example.com/ventaVehiculos" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://example.com/ventaVehiculos" 
+    name="VentaVehiculosService">
 
-    # ✅ Generar el WSDL correcto desde la aplicación interna
-    wsdl_xml = soap_app.app.wsdl11.get_interface_document(wsdl_url)
+  <types>
+    <xsd:schema 
+        targetNamespace="http://example.com/ventaVehiculos"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://example.com/ventaVehiculos"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
 
-    return Response(wsdl_xml, mimetype='text/xml')
+      <xsd:element name="RegistrarVentaRequest" type="tns:RegistrarVentaRequestType"/>
+      <xsd:element name="RegistrarVentaResponse" type="tns:RegistrarVentaResponseType"/>
+
+      <xsd:complexType name="RegistrarVentaRequestType">
+        <xsd:sequence>
+          <xsd:element name="Cliente" type="tns:ClienteType"/>
+          <xsd:element name="Vehiculo" type="tns:VehiculoType"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="RegistrarVentaResponseType">
+        <xsd:sequence>
+          <xsd:element name="Codigo" type="xsd:string"/>
+          <xsd:element name="Mensaje" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ClienteType">
+        <xsd:sequence>
+          <xsd:element name="Id" type="xsd:string"/>
+          <xsd:element name="Nombre" type="xsd:string"/>
+          <xsd:element name="Documento" type="xsd:string"/>
+          <xsd:element name="Email" type="xsd:string"/>
+          <xsd:element name="Telefono" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="VehiculoType">
+        <xsd:sequence>
+          <xsd:element name="Placa" type="xsd:string"/>
+          <xsd:element name="Marca" type="xsd:string"/>
+          <xsd:element name="Modelo" type="xsd:string"/>
+          <xsd:element name="Precio" type="xsd:decimal"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+    </xsd:schema>
+  </types>
+
+  <message name="RegistrarVentaRequestMessage">
+    <part name="parameters" element="tns:RegistrarVentaRequest"/>
+  </message>
+
+  <message name="RegistrarVentaResponseMessage">
+    <part name="parameters" element="tns:RegistrarVentaResponse"/>
+  </message>
+
+  <portType name="VentaVehiculosPortType">
+    <operation name="RegistrarVenta">
+      <input message="tns:RegistrarVentaRequestMessage"/>
+      <output message="tns:RegistrarVentaResponseMessage"/>
+    </operation>
+  </portType>
+
+  <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="RegistrarVenta">
+      <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="VentaVehiculosService">
+    <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
+      <soap:address location="http://localhost:5000/ventaVehiculos"/>
+    </port>
+  </service>
+</definitions>
+"""
+    return Response(wsdl_content, mimetype='text/xml')
 
 
 if __name__ == "__main__":

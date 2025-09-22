@@ -2,21 +2,20 @@
                   xmlns:ven="http://example.com/ventaVehiculos">
    <soapenv:Header/>
    <soapenv:Body>
-      <ven:RegistrarVentaRequest>
-         <ven:Cliente>
-            <ven:Id>101</ven:Id>
+      <ven:RegistrarVenta>
+         <ven:cliente>
+            <ven:Id>123</ven:Id>
             <ven:Nombre>Juan Pérez</ven:Nombre>
+            <ven:Documento>CC100200300</ven:Documento>
             <ven:Email>juan.perez@example.com</ven:Email>
-         </ven:Cliente>
-         <ven:Vehiculo>
-            <ven:Id>202</ven:Id>
+            <ven:Telefono>3001234567</ven:Telefono>
+         </ven:cliente>
+         <ven:vehiculo>
+            <ven:Placa>ABC123</ven:Placa>
             <ven:Marca>Toyota</ven:Marca>
             <ven:Modelo>Corolla</ven:Modelo>
-         </ven:Vehiculo>
-         <ven:Compra>
-            <ven:Fecha>2025-09-21</ven:Fecha>
-            <ven:Monto>18500.50</ven:Monto>
-         </ven:Compra>
-      </ven:RegistrarVentaRequest>
+            <ven:Precio>85000.50</ven:Precio>
+         </ven:vehiculo>
+      </ven:RegistrarVenta>
    </soapenv:Body>
 </soapenv:Envelope>

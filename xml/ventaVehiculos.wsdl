@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions 
     xmlns="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-    xmlns:tns="http://example.com/ventaVehiculos"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:tns="http://example.com/ventaVehiculos" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://example.com/ventaVehiculos"
+    targetNamespace="http://example.com/ventaVehiculos" 
     name="VentaVehiculosService">
 
-  <!-- ==== TYPES ==== -->
+  <!-- ======================================================= -->
+  <!-- =============== TYPES ================================= -->
+  <!-- ======================================================= -->
   <types>
-    <xsd:schema targetNamespace="http://example.com/ventaVehiculos">
+    <xsd:schema 
+        targetNamespace="http://example.com/ventaVehiculos"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://example.com/ventaVehiculos"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
 
-      <!-- Cliente -->
-      <xsd:complexType name="Cliente">
+      <!-- ================== ELEMENTOS GLOBALES ================== -->
+      <xsd:element name="RegistrarVentaRequest" type="tns:RegistrarVentaRequestType"/>
+      <xsd:element name="RegistrarVentaResponse" type="tns:RegistrarVentaResponseType"/>
+
+      <!-- ================== TIPOS DE REQUEST/RESPONSE ============ -->
+      <xsd:complexType name="RegistrarVentaRequestType">
+        <xsd:sequence>
+          <xsd:element name="Cliente" type="tns:ClienteType"/>
+          <xsd:element name="Vehiculo" type="tns:VehiculoType"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="RegistrarVentaResponseType">
+        <xsd:sequence>
+          <xsd:element name="Codigo" type="xsd:string"/>
+          <xsd:element name="Mensaje" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- ================== TIPOS COMPUESTOS ================== -->
+      <xsd:complexType name="ClienteType">
         <xsd:sequence>
           <xsd:element name="Id" type="xsd:string"/>
           <xsd:element name="Nombre" type="xsd:string"/>
@@ -22,77 +48,44 @@
         </xsd:sequence>
       </xsd:complexType>
 
-      <!-- Vehiculo -->
-      <xsd:complexType name="Vehiculo">
+      <xsd:complexType name="VehiculoType">
         <xsd:sequence>
-          <xsd:element name="Vin" type="xsd:string"/>
+          <xsd:element name="Placa" type="xsd:string"/>
           <xsd:element name="Marca" type="xsd:string"/>
           <xsd:element name="Modelo" type="xsd:string"/>
-          <xsd:element name="Ano" type="xsd:int"/>
           <xsd:element name="Precio" type="xsd:decimal"/>
         </xsd:sequence>
       </xsd:complexType>
 
-      <!-- Item de Compra -->
-      <xsd:complexType name="Item">
-        <xsd:sequence>
-          <xsd:element name="IdItem" type="xsd:int"/>
-          <xsd:element name="Descripcion" type="xsd:string"/>
-          <xsd:element name="Cantidad" type="xsd:int"/>
-          <xsd:element name="Valor" type="xsd:decimal"/>
-        </xsd:sequence>
-      </xsd:complexType>
-
-      <!-- Lista de Compras -->
-      <xsd:complexType name="Compras">
-        <xsd:sequence>
-          <xsd:element name="Item" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-      </xsd:complexType>
-
-      <!-- Venta -->
-      <xsd:complexType name="Venta">
-        <xsd:sequence>
-          <xsd:element name="Cliente" type="tns:Cliente"/>
-          <xsd:element name="Vehiculo" type="tns:Vehiculo"/>
-          <xsd:element name="Compras" type="tns:Compras"/>
-        </xsd:sequence>
-      </xsd:complexType>
-
-      <!-- Request y Response -->
-      <xsd:element name="RegistrarVentaRequest" type="tns:Venta"/>
-      <xsd:element name="RegistrarVentaResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="Codigo" type="xsd:int"/>
-            <xsd:element name="Mensaje" type="xsd:string"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-
     </xsd:schema>
   </types>
 
-  <!-- ==== MESSAGES ==== -->
-  <message name="RegistrarVentaInput">
+  <!-- ======================================================= -->
+  <!-- =============== MENSAJES ============================== -->
+  <!-- ======================================================= -->
+  <message name="RegistrarVentaRequestMessage">
     <part name="parameters" element="tns:RegistrarVentaRequest"/>
   </message>
 
-  <message name="RegistrarVentaOutput">
+  <message name="RegistrarVentaResponseMessage">
     <part name="parameters" element="tns:RegistrarVentaResponse"/>
   </message>
 
-  <!-- ==== PORT TYPE ==== -->
+  <!-- ======================================================= -->
+  <!-- =============== PORTTYPE ============================== -->
+  <!-- ======================================================= -->
   <portType name="VentaVehiculosPortType">
     <operation name="RegistrarVenta">
-      <input message="tns:RegistrarVentaInput"/>
-      <output message="tns:RegistrarVentaOutput"/>
+      <input message="tns:RegistrarVentaRequestMessage"/>
+      <output message="tns:RegistrarVentaResponseMessage"/>
     </operation>
   </portType>
 
-  <!-- ==== BINDING ==== -->
+  <!-- ======================================================= -->
+  <!-- =============== BINDING =============================== -->
+  <!-- ======================================================= -->
   <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="RegistrarVenta">
       <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
       <input>
@@ -104,7 +97,9 @@
     </operation>
   </binding>
 
-  <!-- ==== SERVICE ==== -->
+  <!-- ======================================================= -->
+  <!-- =============== SERVICE =============================== -->
+  <!-- ======================================================= -->
   <service name="VentaVehiculosService">
     <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
       <soap:address location="http://localhost:5000/ventaVehiculos"/>
