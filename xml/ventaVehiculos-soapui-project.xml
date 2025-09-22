@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="e4555fc0-fb73-4e75-8e22-3a0f38ebe190" activeEnvironment="Default" name="ventaVehiculos" resourceRoot="" soapui-version="5.9.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="c504f668-2a3b-484a-9b17-ffdec5e54828" wsaVersion="NONE" name="VentaVehiculosBinding" type="wsdl" bindingName="{http://example.com/ventaVehiculos}VentaVehiculosBinding" soapVersion="1_1" anonymous="optional" definition="file:/C:/Users/GIOVANNY_ALEJANDRO/Documents/IBM/venta_vehiculos_soap_proyecto/xml/ventaVehiculos.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl"><con:part><con:url>file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl</con:url><con:content><![CDATA[<definitions targetNamespace="http://example.com/ventaVehiculos" name="VentaVehiculosService" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://example.com/ventaVehiculos" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!--=======================================================-->
+  <!--=============== TYPES =================================-->
+  <!--=======================================================-->
+  <types>
+    <xsd:schema targetNamespace="http://example.com/ventaVehiculos" elementFormDefault="qualified" attributeFormDefault="unqualified">
+      <!--================== ELEMENTOS GLOBALES ==================-->
+      <xsd:element name="RegistrarVentaRequest" type="tns:RegistrarVentaRequestType"/>
+      <xsd:element name="RegistrarVentaResponse" type="tns:RegistrarVentaResponseType"/>
+      <!--================== TIPOS DE REQUEST/RESPONSE ============-->
+      <xsd:complexType name="RegistrarVentaRequestType">
+        <xsd:sequence>
+          <xsd:element name="Cliente" type="tns:ClienteType"/>
+          <xsd:element name="Vehiculo" type="tns:VehiculoType"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RegistrarVentaResponseType">
+        <xsd:sequence>
+          <xsd:element name="Codigo" type="xsd:string"/>
+          <xsd:element name="Mensaje" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <!--================== TIPOS COMPUESTOS ==================-->
+      <xsd:complexType name="ClienteType">
+        <xsd:sequence>
+          <xsd:element name="Id" type="xsd:string"/>
+          <xsd:element name="Nombre" type="xsd:string"/>
+          <xsd:element name="Documento" type="xsd:string"/>
+          <xsd:element name="Email" type="xsd:string"/>
+          <xsd:element name="Telefono" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="VehiculoType">
+        <xsd:sequence>
+          <xsd:element name="Placa" type="xsd:string"/>
+          <xsd:element name="Marca" type="xsd:string"/>
+          <xsd:element name="Modelo" type="xsd:string"/>
+          <xsd:element name="Precio" type="xsd:decimal"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <!--=======================================================-->
+  <!--=============== MENSAJES ==============================-->
+  <!--=======================================================-->
+  <message name="RegistrarVentaRequestMessage">
+    <part name="parameters" element="tns:RegistrarVentaRequest"/>
+  </message>
+  <message name="RegistrarVentaResponseMessage">
+    <part name="parameters" element="tns:RegistrarVentaResponse"/>
+  </message>
+  <!--=======================================================-->
+  <!--=============== PORTTYPE ==============================-->
+  <!--=======================================================-->
+  <portType name="VentaVehiculosPortType">
+    <operation name="RegistrarVenta">
+      <input message="tns:RegistrarVentaRequestMessage"/>
+      <output message="tns:RegistrarVentaResponseMessage"/>
+    </operation>
+  </portType>
+  <!--=======================================================-->
+  <!--=============== BINDING ===============================-->
+  <!--=======================================================-->
+  <binding name="VentaVehiculosBinding" type="tns:VentaVehiculosPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="RegistrarVenta">
+      <soap:operation soapAction="http://example.com/ventaVehiculos/RegistrarVenta"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <!--=======================================================-->
+  <!--=============== SERVICE ===============================-->
+  <!--=======================================================-->
+  <service name="VentaVehiculosService">
+    <port name="VentaVehiculosPort" binding="tns:VentaVehiculosBinding">
+      <soap:address location="http://localhost:5000/ventaVehiculos"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:5000/ventaVehiculos</con:endpoint></con:endpoints><con:operation id="58bba0aa-6b4f-476a-89eb-1989e260d1dc" isOneWay="false" action="http://example.com/ventaVehiculos/RegistrarVenta" name="RegistrarVenta" bindingOperationName="RegistrarVenta" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="9ed661ad-816a-4c9e-bfa7-8ea372346c84" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:5000/ventaVehiculos</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:ven="http://example.com/ventaVehiculos">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ven:RegistrarVenta>
+         <ven:cliente>
+            <ven:Id>456</ven:Id>
+            <ven:Nombre>María Gómez</ven:Nombre>
+            <ven:Documento>CC987654321</ven:Documento>
+            <ven:Email>maria.gomez@example.com</ven:Email>
+            <ven:Telefono>3109876543</ven:Telefono>
+         </ven:cliente>
+         <ven:vehiculo>
+            <ven:Placa>XYZ789</ven:Placa>
+            <ven:Marca>Honda</ven:Marca>
+            <ven:Modelo>Civic</ven:Modelo>
+            <ven:Precio>92000.75</ven:Precio>
+         </ven:vehiculo>
+      </ven:RegistrarVenta>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://example.com/ventaVehiculos/RegistrarVenta"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
