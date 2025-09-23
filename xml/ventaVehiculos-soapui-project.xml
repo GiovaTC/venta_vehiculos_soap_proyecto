@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="e4555fc0-fb73-4e75-8e22-3a0f38ebe190" activeEnvironment="Default" name="ventaVehiculos" resourceRoot="" soapui-version="5.9.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="c504f668-2a3b-484a-9b17-ffdec5e54828" wsaVersion="NONE" name="VentaVehiculosBinding" type="wsdl" bindingName="{http://example.com/ventaVehiculos}VentaVehiculosBinding" soapVersion="1_1" anonymous="optional" definition="file:/C:/Users/GIOVANNY_ALEJANDRO/Documents/IBM/venta_vehiculos_soap_proyecto/xml/ventaVehiculos.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl"><con:part><con:url>file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl</con:url><con:content><![CDATA[<definitions targetNamespace="http://example.com/ventaVehiculos" name="VentaVehiculosService" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://example.com/ventaVehiculos" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<con:soapui-project id="e4555fc0-fb73-4e75-8e22-3a0f38ebe190" activeEnvironment="Default" name="ventaVehiculos" resourceRoot="" soapui-version="5.9.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="c504f668-2a3b-484a-9b17-ffdec5e54828" wsaVersion="NONE" name="VentaVehiculosBinding" type="wsdl" bindingName="{http://example.com/ventaVehiculos}VentaVehiculosBinding" soapVersion="1_1" anonymous="optional" definition="file:/C:/Users/GIOVANNY_ALEJANDRO/Documents/IBM/venta_vehiculos_soap_proyecto/xml/ventaVehiculos.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl"><con:part><con:url>file:\C:\Users\GIOVANNY_ALEJANDRO\Documents\IBM\venta_vehiculos_soap_proyecto\xml\ventaVehiculos.wsdl</con:url><con:content><![CDATA[<definitions targetNamespace="http://example.com/ventaVehiculos" name="VentaVehiculosService" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://example.com/ventaVehiculos" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!--=======================================================-->
   <!--=============== TYPES =================================-->
   <!--=======================================================-->
@@ -88,7 +88,7 @@
    <soapenv:Body>
       <ven:RegistrarVenta>
          <ven:cliente>
-            <ven:Id>456</ven:Id>
+            <ven:Id>1002</ven:Id>
             <ven:Nombre>María Gómez</ven:Nombre>
             <ven:Documento>CC987654321</ven:Documento>
             <ven:Email>maria.gomez@example.com</ven:Email>
